@@ -283,14 +283,23 @@ with c2:
         else:
             rows = []
             for _, t in feas.iterrows():
+                base_score = 0.1  # Minimum score for any feasible match
+
                 tag_score  = jaccard(needs_set, t["_SPECIAL_SET"])
+                if tag_score == 0.0:
+                    tag_score = 0.01
+
                 text_score = (0.0 if not HAS_SKLEARN else
                               (lambda a,b: float(cosine_similarity(TfidfVectorizer(min_df=1, stop_words="english")
                                                                    .fit_transform([a,b]))[0,1]))(notes_txt, t["_BIO"])) if w_text > 0 else 0.0
+                if text_score == 0.0:
+                    text_score = 0.01
+
                 mod_boost  = 0.1 if (p_modality and (p_modality in t["_MODS"])) else 0.0
                 ins_boost  = 0.1 if (p_ins and (p_ins in t["_INS"])) else 0.0
                 misc       = min(mod_boost + ins_boost, 0.2)
-                score      = w_tags*tag_score + w_text*text_score + w_misc*misc
+
+                score      = base_score + w_tags*tag_score + w_text*text_score + w_misc*misc
 
                 parts = [f"tags {tag_score:.2f}"]
                 if w_text > 0: parts.append(f"text {text_score:.2f}")
