@@ -327,19 +327,12 @@ with c2:
 
                 score      = base_score + w_tags*tag_score + w_text*text_score + w_misc*misc
 
-                parts = [f"tags {tag_score:.2f}"]
-                if w_text > 0: parts.append(f"text {text_score:.2f}")
-                if mod_boost:  parts.append(f"mod:{p_modality}")
-                if ins_boost:  parts.append(f"ins:{p_ins}")
-                reason = " | ".join(parts)
-
                 rows.append({
                     "therapist_id": t["_TID"],
                     "score": round(float(score), 4),
                     "tag": round(tag_score, 3),
                     "text": round(text_score, 3),
-                    "misc": round(misc, 3),
-                    "reason": reason
+                    "misc": round(misc, 3)
                 })
 
             ranked = pd.DataFrame(rows).sort_values("score", ascending=False).head(3)
@@ -363,7 +356,7 @@ with c2:
                     if cA.button("Approve", key=f"approve_{pid}_{tt['_TID']}"):
                         st.session_state["decisions"].append({
                             "patient_id": pid, "therapist_id": tt["_TID"],
-                            "decision": "approve", "score": r["score"], "reason": r["reason"]
+                            "decision": "approve", "score": r["score"]
                         })
                         st.success("Approved")
                     rej = cB.text_input("Reject reason", key=f"rej_{pid}_{tt['_TID']}")
