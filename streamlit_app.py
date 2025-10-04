@@ -160,7 +160,7 @@ with st.sidebar.expander("Show Instructions", expanded=False):
             - **Text similarity:** TF-IDF cosine similarity between patient notes and therapist bio (using scikit-learn).
             - **Miscellaneous boosts:** +0.1 for matching modality, +0.1 for matching insurance.
         - **Formula:**  
-          `score = 0.1 + w_tags * tag_score + w_text * text_score + w_misc * misc_boost`
+          `score = w_tags * tag_score + w_text * text_score + w_misc * misc_boost`
           - `tag_score = max(Jaccard(needs, specialties), 0.01)`
           - `text_score = max(TF-IDF cosine similarity, 0.01)`
           - `misc_boost = min(modality_boost + insurance_boost, 0.2)`
@@ -218,6 +218,11 @@ therapists["_SPECIAL"]     = therapists.get("INTEREST_SPECIALITIES", "").astype(
 therapists["_SPECIAL_SET"] = therapists["_SPECIAL"].apply(parse_set)
 
 # ----------------- UI -----------------
+# Select patient before displaying the matching parameters section
+
+# Move this to the very top of the UI section, before any columns or widgets
+st.markdown("## Patient → Therapist Matching (Journey schemas)")
+
 c1, c2 = st.columns([1, 2])
 
 with c1:
@@ -247,6 +252,7 @@ with c1:
         st.session_state[f"needs_{pid}"] = random_needs
         st.session_state[f"notes_{pid}"] = random_note
         st.session_state[f"ins_{pid}"] = patient_ins
+        st.session_state[f"modality_{pid}"] = ""  # <-- Reset modality on patient switch
         st.session_state["prev_pid"] = pid
 
     version = st.session_state["patient_version"]
@@ -267,7 +273,8 @@ with c1:
 
     p_modality = st.text_input(
         "Preferred modality (optional, e.g., Telehealth, In-person)",
-        value=""
+        key=f"modality_{pid}_{version}",
+        value=st.session_state.get(f"modality_{pid}", "")
     ).strip()
     p_ins = st.text_input(
         "Insurance (optional, e.g., Aetna)",
@@ -279,16 +286,16 @@ with c1:
 mask = patients["_PID"] == pid
 p_state_norm = patients.loc[mask, "_STATE"].iloc[0] if mask.any() else ""
 
-st.title("Patient → Therapist Matching (Journey schemas)")
+# Place the matching parameters section AFTER patient selection
+# st.markdown("## Patient → Therapist Matching (Journey schemas)")
+st.markdown("### Hard matching parameters:")
 if mask.any():
     st.markdown(
-        f"**Hard matching parameters:**\n"
         f"- Therapist must be credentialed in the patient's state (**{p_state_norm}**)\n"
         f"- Therapist must be accepting new patients"
     )
 else:
     st.markdown(
-        "**Hard matching parameters:**\n"
         "- Therapist must be credentialed in the patient's state\n"
         "- Therapist must be accepting new patients"
     )
