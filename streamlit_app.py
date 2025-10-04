@@ -141,6 +141,22 @@ with st.sidebar.expander("Show Instructions", expanded=False):
         2. Adjust weights as needed.
         3. Select a patient and review top therapist matches.
         4. Approve or reject matches and export your decisions.
+
+        ---
+        **How does matching work?**
+        - **Hard filters:** Therapist must be credentialed in the patient's state and accepting new patients.
+        - **Scoring:** Each feasible match is scored using:
+            - **Tag overlap:** Jaccard similarity between patient needs and therapist specialties.
+            - **Text similarity:** TF-IDF cosine similarity between patient notes and therapist bio (using scikit-learn).
+            - **Miscellaneous boosts:** +0.1 for matching modality, +0.1 for matching insurance.
+        - **Formula:**  
+          `score = 0.1 + w_tags * tag_score + w_text * text_score + w_misc * misc_boost`
+          - `tag_score = max(Jaccard(needs, specialties), 0.01)`
+          - `text_score = max(TF-IDF cosine similarity, 0.01)`
+          - `misc_boost = min(modality_boost + insurance_boost, 0.2)`
+
+        **Tech stack:**  
+        - Python, Streamlit, Pandas, scikit-learn (TF-IDF), Jaccard similarity.
         """
     )
 
