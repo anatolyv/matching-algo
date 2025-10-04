@@ -133,6 +133,16 @@ def col_or(df, row_mask, col, fallback=""):
 # ----------------- sidebar -----------------
 st.sidebar.header("Upload CSVs (Journey schemas)")
 
+# Set sidebar width to 500px
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"] { min-width: 500px; max-width: 500px; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 with st.sidebar.expander("Show Instructions", expanded=False):
     st.markdown(
         """
@@ -143,7 +153,7 @@ with st.sidebar.expander("Show Instructions", expanded=False):
         4. Approve or reject matches and export your decisions.
 
         ---
-        **How does matching work?**
+        **Matching Algorithm Overview**
         - **Hard filters:** Therapist must be credentialed in the patient's state and accepting new patients.
         - **Scoring:** Each feasible match is scored using:
             - **Tag overlap:** Jaccard similarity between patient needs and therapist specialties.
