@@ -9,15 +9,21 @@ import random
 
 # --- Move these arrays to the top, right after imports ---
 NEEDS_KEYWORDS = [
-    "anxiety", "depression", "trauma", "cbt", "ptsd", "grief", "stress", "anger", "adhd", "autism",
-    "relationship", "family", "addiction", "eating disorder", "bipolar", "panic", "phobia", "sleep",
-    "self-esteem", "mindfulness", "career", "parenting", "divorce", "abuse", "lgbtq", "identity",
-    "social skills", "emotional regulation", "coping skills", "life transitions", "chronic illness",
-    "pain management", "obsessive-compulsive", "psychosis", "schizophrenia", "self-harm", "suicidal ideation",
-    "substance use", "codependency", "perfectionism", "spirituality", "anger management", "stress management",
-    "assertiveness", "communication", "boundaries", "motivation", "goal setting", "peer relationships",
-    "school issues", "work stress"
-]
+    "Acceptance & Commitment Therapy (ACT)", "Addiction", "ADHD", "AEDP", "Anger",
+    "Anxiety", "Attachment", "BIPOC", "Bipolar", "Career", "Chronic pain",
+    "Cognitive Behavioral Therapy (CBT)", "Couples", "Depression",
+    "Dialectical behavior therapy", "Eating disorders", "EMDR",
+    "Emotional Freedom Technique", "Emotionally Focused Therapy",
+    "Existential Therapy", "Experiential Therapy", "Family / Marital Therapy",
+    "Grief", "Hospice/end-of-life care", "Hypnotherapy", "Integrative Therapy",
+    "Internal Family Systems (IFS)", "Interpersonal Therapy", "LGBTQ+",
+    "Mindfulness", "Neuro-Linguistic Therapy", "Neurodivergence",
+    "Neurofeedback Therapy", "OCD", "Parenting", "Postpartum", "Psychoanalysis",
+    "PTSD", "Relationship Issues", "Seniors", "Sex addiction/therapy",
+    "Sleep/insomnia", "Somatic", "Somatic Experiencing", "Spirituality",
+    "Stress", "Substance abuse", "Trauma", "Transgender/non-binary",
+    "Transpersonal Therapy", "Veterans & First Responders"
+    ]
 
 NOTES_PHRASES = [
     "Looking for a therapist experienced with trauma and PTSD.",
@@ -394,3 +400,9 @@ st.caption(
     "Score = tags overlap + TF-IDF text similarity (+ small boosts for modality/insurance). "
     "Per-patient widget keys ensure inputs change with Patient ID."
 )
+
+
+
+# st.write("Patient needs:", needs_set)
+# st.write("Therapist specialties:", t["_SPECIAL_SET"])
+# st.write("Jaccard:", jaccard(needs_set, t["_SPECIAL_SET"]))
